@@ -9,33 +9,53 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
-    let total = 0 ;
+    let total = 0;
     cart.forEach(item => {
-        const quantity = item.quantity;
-        const cost = parseFloat(item.cost.substring(1)); // "$10.00" → 10.00
-        total += quantity * cost;
+      const quantity = item.quantity;
+      const cost = parseFloat(item.cost.substring(1)); // "$10.00" → 10.00
+      total += quantity * cost;
     });
+    return total.toFixed(2); // ✅ devuelve el total con dos decimales
   };
 
   const handleContinueShopping = (e) => {
-
+    onContinueShopping(e);
   };
 
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
+  };
 
-
+  
   const handleIncrement = (item) => {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
   const handleDecrement = (item) => {
-   
+    if (item.quantity > 1) {
+      // si hay más de 1, disminuye en 1
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+    } else {
+      // si va a quedar en 0, elimina el producto del carrito
+      dispatch(removeItem(item.name));
+    }
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    // Extrae el valor numérico del costo (por ejemplo, "$10.00" → 10.00)
+    const cost = parseFloat(item.cost.substring(1));
+    
+    // Multiplica cantidad × costo unitario
+    const total = item.quantity * cost;
+  
+    return total;
   };
+  
 
   return (
     <div className="cart-container">
